@@ -1,1 +1,2 @@
-"# ComputerVision" 
+- basic python practise
+- numpy ndarray practise
