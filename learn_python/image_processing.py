@@ -5,6 +5,9 @@ from skimage.util import invert
 # Pull in pyploy from matplotlib
 import matplotlib.pyplot as plot
 from skimage import data
+from numpy.linalg import norm
+import numpy as np
+
 
 print('1) Reading Peppers.jpg')
 # read with imread, note this results in a matrix of intensities for each pixel in the image
@@ -86,15 +89,21 @@ center_y = rows / 2
 max_distance = math.sqrt(center_x + center_y)
 m = interp1d([0, max_distance], [0, 255])
 
+v_center = [center_x, center_y, 0]
 
 def brightness(r, image_width):
-    return math.exp(-(m(r) / image_width))
+    return math.exp(-r / image_width)
 
 
 for y in range(rows):
     for x in range(cols):
         # determine distance from center
-        distance = math.sqrt(center_x - x) + (center_y - y)
-        print(f'd([{x},{y}]) = {distance}, brightness= ')
+        me = np.array([x, y, 0])
+        #p = np.array([x, center_x])
+        #q = np.array([center_x, y])
+        #hyp = q - p
+        dist = np.linalg.norm(v_center - me)
+        #distance = norm(hyp) #math.sqrt(center_x - x) + (center_y - y)
+        cat_vign[y][x] = brightness(dist, cols)
 plot.imshow(cat)
 plot.show()
